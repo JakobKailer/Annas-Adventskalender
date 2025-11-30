@@ -43,16 +43,19 @@ h2{margin:18px 0 8px;color:#7a2f45;}
 .lights{position:fixed;top:0;left:0;width:100%;height:24px;display:flex;justify-content:space-around;z-index:999;}
 .light{width:12px;height:12px;border-radius:50%;animation:blink 1.5s infinite alternate;}
 @keyframes blink{0%{opacity:0.2;}100%{opacity:1;}}
-#tree{
+#tree {
   position: fixed;
   bottom: 0;
   left: 50%;
   transform: translateX(-50%);
-  width: 200px;
-  height: 300px;
-  background: url('weihnachtsbild.jpg') no-repeat center bottom/contain;
-  opacity: 0.25;
-  z-index: 1;
+  width: 80vw;          /* Baum sehr breit, 80% der Fensterbreite */
+  max-width: 1000px;    /* optional, damit es nicht zu riesig wird */
+  height: auto;         /* Höhe proportional zum Bild */
+  min-height: 600px;    /* mindestens 600px hoch */
+  background: url('weihnachtsbild.jpg') no-repeat center bottom/contain; /* dein lokales Bild */
+  opacity: 0.15;        /* sehr dezent, wie ein Hintergrund */
+  z-index: 0;           /* ganz hinten, hinter allen Hinweisen */
+  pointer-events: none; /* Baum blockiert keine Klicks auf Hinweise */
 }
 </style>
 </head>
