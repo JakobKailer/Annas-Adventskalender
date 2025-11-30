@@ -16,9 +16,9 @@
   --light:#ffd700;
 }
 html,body{height:100%;margin:0;font-family:"Helvetica Neue",Arial,sans-serif;background:linear-gradient(180deg,var(--bg1),var(--bg2));color:#5a1b2b;overflow-x:hidden;position:relative;}
-body{display:flex;flex-direction:column;align-items:center;padding:28px;box-sizing:border-box;}
+body{display:flex;flex-direction:column;align-items:center;padding:28px;box-sizing:border-box;position:relative}
 h1 {
-  font-size: 3.2rem;        /* vorher 2.4rem, jetzt größer */
+  font-size: 2.8rem;        /* vorher 2.4rem, jetzt größer */
   margin: 12px 0 6px;
   letter-spacing: 1px;
   color: var(--accent);
@@ -61,8 +61,12 @@ h2{margin:18px 0 8px;color:#7a2f45;}
   min-height: 800px;    /* mindestens 600px hoch */
   background: url('weihnachtsbild.jpg') no-repeat center bottom/contain; /* dein lokales Bild */
   opacity: 0.15;        /* sehr dezent, wie ein Hintergrund */
-  z-index: -1;           /* ganz hinten, hinter allen Hinweisen */
+  z-index: 0;           /* ganz hinten, hinter allen Hinweisen */
   pointer-events: none; /* Baum blockiert keine Klicks auf Hinweise */
+}
+#hints, h1, #countdown, .modal-backdrop {
+  position: relative;
+  z-index: 1;       /* alle wichtigen Elemente über dem Baum */
 }
 </style>
 </head>
