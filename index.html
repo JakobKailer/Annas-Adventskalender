@@ -139,10 +139,24 @@ h2 {
   .hint-box{min-height:72px;padding:14px;}
   h1{font-size:1.8rem;}
 }
+#tree {
+  position: fixed;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 80vw;          /* Baum breit */
+  max-width: 1200px;     /* optional */
+  height: auto;
+  min-height: 600px;     /* Mindesthöhe */
+  background: url('weihnachtsbild.jpg') no-repeat center bottom/contain; /* dein Baum-Bild */
+  opacity: 0.15;         /* dezent */
+  z-index: 0;            /* hinter allen Elementen */
+  pointer-events: none;  /* klickbar bleiben die Hinweise */
+}
 </style>
 </head>
 <body>
-
+<div id="tree"></div>
 <h1>💖 Weihnachts-Countdown für Dich 💖</h1>
 <div id="countdown" aria-live="polite">Lädt…</div>
 <h2>Deine täglichen Hinweise</h2>
