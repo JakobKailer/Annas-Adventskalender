@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Christmas Countdown</title>
+  <title>Annas Adventskalender</title>
   <style>
     body {
       margin: 0;
@@ -70,10 +70,10 @@
 </head>
 <body>
 
-  <h1>🎄 Christmas Countdown 🎁</h1>
+  <h1>💖 Weihnachts-Countdown für Dich 💖</h1>
   <div id="countdown"></div>
 
-  <h2>Daily Hints</h2>
+  <h2>Deine täglichen Hinweise</h2>
   <div id="hints"></div>
 
   <script>
@@ -82,66 +82,78 @@
       const now = new Date();
       const christmas = new Date(now.getFullYear(), 11, 25);
       const diff = christmas - now;
-
       const days = Math.floor(diff / (1000 * 60 * 60 * 24));
       const hours = Math.floor(diff / (1000 * 60 * 60)) % 24;
       const minutes = Math.floor(diff / (1000 * 60)) % 60;
       const seconds = Math.floor(diff / 1000) % 60;
-
       document.getElementById("countdown").innerText =
-        `${days} days ${hours} hours ${minutes} min ${seconds} sec`;
+        `${days} Tage ${hours} Std ${minutes} Min ${seconds} Sek`;
     }
-
     setInterval(updateCountdown, 1000);
     updateCountdown();
 
-    // HINTS (Replace with your hints!)
-    const hints = [
-      "Hint 1: Something cozy...",
-      "Hint 2: It smells nice...",
-      "Hint 3: It's related to winter...",
-      "Hint 4: You might wear it...",
-      "Hint 5: Soft like a hug...",
-      "Hint 6: Color of your choice...",
-      "Hint 7: No more spoilers!",
-      "Hint 8",
-      "Hint 9",
-      "Hint 10",
-      "Hint 11",
-      "Hint 12",
-      "Hint 13",
-      "Hint 14",
-      "Hint 15",
-      "Hint 16",
-      "Hint 17",
-      "Hint 18",
-      "Hint 19",
-      "Hint 20",
-      "Hint 21",
-      "Hint 22",
-      "Hint 23",
-      "Hint 24"
-    ];
-
+    // HINTS
+const hints = [
+"Etwas, das lange unter dem Bett warten musste",
+"Ein kleines Abenteuer, das in deinen Händen beginnt…",
+"Etwas, das uns spielerisch näher zusammenbringt… 🤍",
+"Ein Moment der Ruhe, den wir Stück für Stück teilen… 🧩",
+"Etwas, das wächst, wenn man daran arbeitet… ",
+"Etwas, das ein Lächeln hervorzaubert – wie du bei mir… 😊",
+"Etwas, das du erkennen wirst, sobald du es siehst",
+"Ein Kunstwerk, das wir gemeinsam erschaffen… 🎨",
+"Ein bisschen Kindheit",
+"Etwas aus vielen kleinen Teilen…",
+"Freund und Freundin",
+"Etwas, das wir buchstäblich teilen können, wenn du willst",
+"Ein Geschenk, das ein Stück unserer Geschichte trägt",
+"Ein Echo eines Abends, der viel bedeutete",
+"Etwas, das in einem Film geboren wurde",
+"Ein Herz aus Metall",
+"Ein kleines Wesen mit großen Augen",
+"Etwas, das neugierig schaut, so wie ich manchmal zu dir💕",
+"Ein Freund, der tapfer und sanft zugleich ist",
+"Etwas, das Pflanzen mag – genau wie du 🌱❤️",
+"Ein Name, der an eine Wand erinnert",
+"Ein Wesen, das Liebe findet – so wie ich bei dir… 💖",
+"Der erste von vielen, die wir gesehen haben",
+"Ein kleiner WALL-E und eine Eve, die wir zusammen zum Leben bauen🎁"
+];
     const today = new Date().getDate();
-
     const hintsContainer = document.getElementById("hints");
+
     hints.forEach((hint, i) => {
       const day = i + 1;
-      const div = document.createElement("div");
-      div.className = "hint-box";
+      const box = document.createElement("div");
+      box.className = "hint-box";
+      box.innerHTML = `<strong>🔔 Hinweis für den ${day}. Dezember</strong>`;
 
-      if (today >= day) {
-        div.innerHTML = `<strong>Dec ${day}:</strong> ${hint}`;
-      } else {
-        div.classList.add("locked");
-        div.innerHTML = `<strong>Dec ${day}:</strong> 🔒 Locked until Dec ${day}`;
-      }
+      box.addEventListener("click", (e) => {
+        // Sparkle effect
+        for (let i = 0; i < 12; i++) {
+          const spark = document.createElement("div");
+          spark.className = "spark";
+          const size = Math.random() * 6 + 4;
+          spark.style.width = size + "px";
+          spark.style.height = size + "px";
+          spark.style.left = e.clientX + "px";
+          spark.style.top = e.clientY + "px";("click", () => {
+        if (today >= day) {
+          alert(hint || "Noch kein Hinweis verfügbar 😊");
+        } else {
+          const messages = [
+            "Nicht so ungeduldig 😘",
+            "Bald weißt du mehr ❤️",
+            "Noch ein bisschen warten...💕"
+          ];
+          alert(messages[Math.floor(Math.random() * messages.length)]);
+        }
+      });
 
-      hintsContainer.appendChild(div);
+      hintsContainer.appendChild(box);
     });
 
-    // SNOWFALL
+    // SNOW
     function createSnowflake() {
       const snowflake = document.createElement('div');
       snowflake.classList.add('snowflake');
@@ -149,13 +161,10 @@
       snowflake.style.left = Math.random() * 100 + 'vw';
       snowflake.style.animationDuration = (Math.random() * 3 + 2) + 's';
       snowflake.style.opacity = Math.random();
-      snowflake.style.fontSize = (Math.random() * 10 + 10) + 'px';
-
+      snowflake.style.fontSize = (Math.random() * 10 + 14) + 'px';
       document.body.appendChild(snowflake);
-
       setTimeout(() => snowflake.remove(), 5000);
     }
-
     setInterval(createSnowflake, 200);
   </script>
 </body>
