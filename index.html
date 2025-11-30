@@ -1,171 +1,252 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="de">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Annas Adventskalender</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Christmas Countdown für Dich</title>
   <style>
-    body {
-      margin: 0;
-      font-family: 'Comic Sans MS', 'Arial Rounded MT Bold', sans-serif;
-      background: linear-gradient(#ffefef, #ffe6f7);
-      color: #b40024;
-      text-align: center;
-      overflow-x: hidden;
+    :root{
+      --bg1: #fff5f7;
+      --bg2: #fff0fb;
+      --accent: #d9447a;
+      --card: #fff;
+      --muted: #9b9b9b;
+      --rose: #ffdeea;
     }
 
-    h1 {
-      margin-top: 50px;
-      font-size: 3rem;
-      color: #d6002a;
-      animation: pop 1.5s ease-in-out infinite alternate;
+    html,body{height:100%;margin:0;font-family: "Helvetica Neue", Arial, sans-serif;background:linear-gradient(180deg,var(--bg1),var(--bg2));color:#5a1b2b}
+    body{display:flex;flex-direction:column;align-items:center;padding:28px;box-sizing:border-box;overflow-x:hidden;}
+
+    h1{font-size:2.4rem;margin:12px 0 6px;letter-spacing:0.6px;color:var(--accent)}
+    #countdown{font-size:1.05rem;margin-bottom:18px;color:#6b2b3f}
+    h2{margin:18px 0 8px;color:#7a2f45}
+
+    /* hint boxes */
+    #hints{width:100%;max-width:720px;display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;padding:8px 6px;box-sizing:border-box}
+    .hint-box{
+      background:linear-gradient(180deg,var(--card),#fff);
+      border-radius:14px;padding:12px 14px;box-shadow:0 6px 18px rgba(90,20,40,0.06);
+      display:flex;align-items:center;justify-content:flex-start;gap:10px;cursor:pointer;
+      user-select:none;border:1px solid rgba(90,20,40,0.05);
+      transition:transform .14s ease, box-shadow .14s ease;
+      min-height:62px;
+    }
+    .hint-box:active{transform:scale(.995)}
+    .hint-box .meta{flex:0 0 56px;height:56px;border-radius:10px;background:linear-gradient(180deg,var(--rose),#ffebf5);display:flex;align-items:center;justify-content:center;font-size:1.15rem}
+    .hint-box strong{display:block;font-size:0.95rem;color:#4b1a2d}
+    .hint-box p{margin:0;font-size:0.86rem;color:var(--muted)}
+
+    .locked p{color:#b39fa6}
+
+    /* sparkle */
+    .spark{
+      position:fixed;
+      width:8px;height:8px;border-radius:50%;
+      pointer-events:none;z-index:9999;
+      background:radial-gradient(circle,#fff8ff,#ffd7ec);
+      box-shadow:0 0 12px rgba(217,68,122,0.7);
+      mix-blend-mode:screen;
     }
 
-    @keyframes pop {
-      from { transform: scale(1); }
-      to { transform: scale(1.08); }
-    }
+    /* modal */
+    .modal-backdrop{position:fixed;inset:0;background:rgba(11,6,10,0.45);display:flex;align-items:center;justify-content:center;z-index:9998;opacity:0;pointer-events:none;transition:opacity .18s ease}
+    .modal-backdrop.show{opacity:1;pointer-events:auto}
+    .modal{background:#fff;border-radius:14px;padding:20px;max-width:420px;width:92%;box-shadow:0 18px 50px rgba(30,10,30,0.35);text-align:center}
+    .modal h3{margin:0 0 8px;color:var(--accent)}
+    .modal p{margin:0 0 14px;color:#5a1b2b;font-size:0.98rem}
+    .modal .close{background:transparent;border:0;color:var(--accent);font-weight:700;cursor:pointer;padding:8px 12px;border-radius:8px}
+    .modal .date{font-size:0.85rem;color:var(--muted);margin-bottom:10px}
 
-    #countdown {
-      font-size: 1.8rem;
-      margin-bottom: 30px;
-    }
-
-    .hint-box {
-      width: 85%;
-      max-width: 500px;
-      background: white;
-      padding: 15px;
-      margin: 12px auto;
-      border-radius: 18px;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-      font-size: 1.2rem;
-      position: relative;
-      animation: fadeIn 1s ease;
-    }
-
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(10px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    .locked {
-      color: #999;
-    }
-
-    /* Snow animation */
-    .snowflake {
-      position: fixed;
-      top: -10px;
-      color: white;
-      font-size: 1.2rem;
-      animation: fall linear infinite;
-    }
-
-    @keyframes fall {
-      0% { transform: translateY(-10px); }
-      100% { transform: translateY(110vh); }
+    /* small screen spacing */
+    @media (max-width:420px){
+      .hint-box{min-height:72px;padding:14px}
+      h1{font-size:1.8rem}
     }
   </style>
 </head>
 <body>
-
-  <h1>💖 Weihnachts-Countdown für Dich 💖</h1>
-  <div id="countdown"></div>
+  <h1>💖 Christmas Countdown für Dich 💖</h1>
+  <div id="countdown" aria-live="polite">Lädt…</div>
 
   <h2>Deine täglichen Hinweise</h2>
-  <div id="hints"></div>
+  <div id="hints" role="list"></div>
+
+  <!-- modal -->
+  <div id="modalBackdrop" class="modal-backdrop" aria-hidden="true">
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+      <div class="date" id="modalDate"></div>
+      <h3 id="modalTitle">Hinweis</h3>
+      <p id="modalText">Text</p>
+      <button id="modalClose" class="close">Schließen</button>
+    </div>
+  </div>
 
   <script>
-    // COUNTDOWN
-    function updateCountdown() {
+    // ------- Countdown -------
+    function updateCountdown(){
       const now = new Date();
-      const christmas = new Date(now.getFullYear(), 11, 25);
+      const year = now.getFullYear();
+      const christmas = new Date(year,11,25,0,0,0);
+      // if it's already past Dec 25, you may want next year - keep simple for now
+      if (now > christmas){
+        // show next year's christmas
+        christmas.setFullYear(year+1);
+      }
       const diff = christmas - now;
-      const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-      const hours = Math.floor(diff / (1000 * 60 * 60)) % 24;
-      const minutes = Math.floor(diff / (1000 * 60)) % 60;
+      const days = Math.floor(diff / (1000*60*60*24));
+      const hours = Math.floor(diff / (1000*60*60)) % 24;
+      const minutes = Math.floor(diff / (1000*60)) % 60;
       const seconds = Math.floor(diff / 1000) % 60;
-      document.getElementById("countdown").innerText =
-        `${days} Tage ${hours} Std ${minutes} Min ${seconds} Sek`;
+      document.getElementById('countdown').textContent = `${days} Tage ${hours} Std ${minutes} Min ${seconds} Sek`;
     }
     setInterval(updateCountdown, 1000);
     updateCountdown();
 
-    // HINTS
-const hints = [
-"Etwas, das lange unter dem Bett warten musste",
-"Ein kleines Abenteuer, das in deinen Händen beginnt…",
-"Etwas, das uns spielerisch näher zusammenbringt… 🤍",
-"Ein Moment der Ruhe, den wir Stück für Stück teilen… 🧩",
-"Etwas, das wächst, wenn man daran arbeitet… ",
-"Etwas, das ein Lächeln hervorzaubert – wie du bei mir… 😊",
-"Etwas, das du erkennen wirst, sobald du es siehst",
-"Ein Kunstwerk, das wir gemeinsam erschaffen… 🎨",
-"Ein bisschen Kindheit",
-"Etwas aus vielen kleinen Teilen…",
-"Freund und Freundin",
-"Etwas, das wir buchstäblich teilen können, wenn du willst",
-"Ein Geschenk, das ein Stück unserer Geschichte trägt",
-"Ein Echo eines Abends, der viel bedeutete",
-"Etwas, das in einem Film geboren wurde",
-"Ein Herz aus Metall",
-"Ein kleines Wesen mit großen Augen",
-"Etwas, das neugierig schaut, so wie ich manchmal zu dir💕",
-"Ein Freund, der tapfer und sanft zugleich ist",
-"Etwas, das Pflanzen mag – genau wie du 🌱❤️",
-"Ein Name, der an eine Wand erinnert",
-"Ein Wesen, das Liebe findet – so wie ich bei dir… 💖",
-"Der erste von vielen, die wir gesehen haben",
-"Ein kleiner WALL-E und eine Eve, die wir zusammen zum Leben bauen🎁"
+    // ------- Hints (romantisch, poetisch, emoji) -------
+   const hints = [
+  "Etwas, das lange unter dem Bett warten musste",
+  "Ein kleines Abenteuer, das in deinen Händen beginnt…",
+  "Etwas, das uns spielerisch näher zusammenbringt… 🤍",
+  "Ein Moment der Ruhe, den wir Stück für Stück teilen… 🧩",
+  "Etwas, das wächst, wenn man daran arbeitet… ",
+  "Etwas, das ein Lächeln hervorzaubert – wie du bei mir… 😊",
+  "Etwas, das du erkennen wirst, sobald du es siehst",
+  "Ein Kunstwerk, das wir gemeinsam erschaffen… 🎨",
+  "Ein bisschen Kindheit",
+  "Etwas aus vielen kleinen Teilen…",
+  "Freund und Freundin",
+  "Etwas, das wir buchstäblich teilen können, wenn du willst",
+  "Ein Geschenk, das ein Stück unserer Geschichte trägt",
+  "Ein Echo eines Abends, der viel bedeutete",
+  "Etwas, das in einem Film geboren wurde",
+  "Ein Herz aus Metall",
+  "Ein kleines Wesen mit großen Augen",
+  "Etwas, das neugierig schaut, so wie ich manchmal zu dir💕",
+  "Ein Freund, der tapfer und sanft zugleich ist",
+  "Etwas, das Pflanzen mag – genau wie du 🌱❤️",
+  "Ein Name, der an eine Wand erinnert",
+  "Ein Wesen, das Liebe findet – so wie ich bei dir… 💖",
+  "Der erste von vielen, die wir gesehen haben",
+  "Ein kleiner WALL-E und eine Eve, die wir zusammen zum Leben bauen🎁"
 ];
-    const today = new Date().getDate();
-    const hintsContainer = document.getElementById("hints");
 
-    hints.forEach((hint, i) => {
-      const day = i + 1;
-      const box = document.createElement("div");
-      box.className = "hint-box";
-      box.innerHTML = `<strong>🔔 Hinweis für den ${day}. Dezember</strong>`;
+    // build hints grid
+    const hintsContainer = document.getElementById('hints');
+    const today = new Date();
+    const todayDate = today.getDate();
+    console.log("Today date:", todayDate);
 
-      box.addEventListener("click", (e) => {
-        // Sparkle effect
-        for (let i = 0; i < 12; i++) {
-          const spark = document.createElement("div");
-          spark.className = "spark";
-          const size = Math.random() * 6 + 4;
-          spark.style.width = size + "px";
-          spark.style.height = size + "px";
-          spark.style.left = e.clientX + "px";
-          spark.style.top = e.clientY + "px";("click", () => {
-        if (today >= day) {
-          alert(hint || "Noch kein Hinweis verfügbar 😊");
+    hints.forEach((text, idx) => {
+      const day = idx + 1;
+      const box = document.createElement('div');
+      box.className = 'hint-box';
+      box.setAttribute('role','button');
+      box.setAttribute('aria-pressed','false');
+      box.tabIndex = 0;
+
+      const meta = document.createElement('div');
+      meta.className = 'meta';
+      meta.textContent = day;
+      const s = document.createElement('div');
+      s.innerHTML = `<strong>Hinweis ${day}</strong><p>${ day <= todayDate ? 'Angeklickt, um zu öffnen' : 'Noch verschlossen'}</p>`;
+
+      if (day <= todayDate){
+        // available
+        s.querySelector('p').textContent = "Zum Ansehen tippen / klicken";
+      } else {
+        // locked
+        s.querySelector('p').textContent = "Nicht so ungeduldig 😉";
+        box.classList.add('locked');
+      }
+
+      box.appendChild(meta);
+      box.appendChild(s);
+
+      // click / keyboard accessible
+      const showMessage = (ev) => {
+        ev.preventDefault();
+        // sparkle at pointer (touch fallback)
+        const x = (ev.clientX !== undefined) ? ev.clientX : (ev.touches && ev.touches[0] && ev.touches[0].clientX) || window.innerWidth/2;
+        const y = (ev.clientY !== undefined) ? ev.clientY : (ev.touches && ev.touches[0] && ev.touches[0].clientY) || window.innerHeight/2;
+
+        // create sparkles
+        for (let i=0;i<12;i++){
+          const spark = document.createElement('div');
+          spark.className = 'spark';
+          const size = Math.random()*8 + 6;
+          spark.style.width = size + 'px';
+          spark.style.height = size + 'px';
+          // start a bit offset so they don't overlap exact pointer
+          spark.style.left = (x - size/2) + 'px';
+          spark.style.top = (y - size/2) + 'px';
+          document.body.appendChild(spark);
+
+          const angle = Math.random()*Math.PI*2;
+          const dist = Math.random()*80 + 30;
+          const targetX = Math.cos(angle)*dist;
+          const targetY = Math.sin(angle)*dist + (Math.random()*20 - 10);
+
+          spark.animate([
+            { transform: 'translate(0,0) scale(1)', opacity:1 },
+            { transform: `translate(${targetX}px, ${targetY}px) scale(.3)`, opacity:0 }
+          ],{ duration: 650 + Math.random()*250, easing: 'cubic-bezier(.1,.9,.2,1)' });
+
+          setTimeout(()=> spark.remove(), 1100);
+        }
+
+        // show modal or locked message
+        if (day <= todayDate){
+          openModal(day, text);
         } else {
-          const messages = [
-            "Nicht so ungeduldig 😘",
-            "Bald weißt du mehr ❤️",
-            "Noch ein bisschen warten...💕"
-          ];
-          alert(messages[Math.floor(Math.random() * messages.length)]);
+          // randomized german locked messages
+          const msgs = ["Nicht so ungeduldig 😘","Bald weißt du mehr ❤️","Noch ein bisschen warten, mein Schatz 💕"];
+          openModal(null, msgs[Math.floor(Math.random()*msgs.length)]);
+        }
+      };
+
+      box.addEventListener('click', showMessage, {passive:false});
+      box.addEventListener('touchstart', showMessage, {passive:false});
+      box.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' '){
+          e.preventDefault();
+          showMessage(e);
         }
       });
 
       hintsContainer.appendChild(box);
     });
 
-    // SNOW
-    function createSnowflake() {
-      const snowflake = document.createElement('div');
-      snowflake.classList.add('snowflake');
-      snowflake.innerText = '❄';
-      snowflake.style.left = Math.random() * 100 + 'vw';
-      snowflake.style.animationDuration = (Math.random() * 3 + 2) + 's';
-      snowflake.style.opacity = Math.random();
-      snowflake.style.fontSize = (Math.random() * 10 + 14) + 'px';
-      document.body.appendChild(snowflake);
-      setTimeout(() => snowflake.remove(), 5000);
+    // ------- modal functions -------
+    const modalBackdrop = document.getElementById('modalBackdrop');
+    const modalText = document.getElementById('modalText');
+    const modalDate = document.getElementById('modalDate');
+    const modalClose = document.getElementById('modalClose');
+
+    function openModal(day, text){
+      if (day){
+        modalDate.textContent = `Dein Hinweis für den ${day}. Dezember`;
+      } else {
+        modalDate.textContent = '';
+      }
+      modalText.textContent = text;
+      modalBackdrop.classList.add('show');
+      modalBackdrop.setAttribute('aria-hidden','false');
+      modalClose.focus();
     }
-    setInterval(createSnowflake, 200);
+    function closeModal(){
+      modalBackdrop.classList.remove('show');
+      modalBackdrop.setAttribute('aria-hidden','true');
+    }
+    modalClose.addEventListener('click', closeModal);
+    modalBackdrop.addEventListener('click', (e) => {
+      if (e.target === modalBackdrop) closeModal();
+    });
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') closeModal();
+    });
+
+    // debug helper: if nothing happens, open console (F12) and look for logs
+    console.log('Hint boxes built:', hints.length);
   </script>
 </body>
 </html>
