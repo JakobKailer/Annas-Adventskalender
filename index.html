@@ -18,10 +18,10 @@
 html,body{height:100%;margin:0;font-family:"Helvetica Neue",Arial,sans-serif;background:linear-gradient(180deg,var(--bg1),var(--bg2));color:#5a1b2b;overflow-x:hidden;position:relative;}
 body{display:flex;flex-direction:column;align-items:center;padding:28px;box-sizing:border-box;position:relative}
 body {
-  background: linear-gradient(180deg, #8B0000, #006400); /* dunkelrot oben, dunkelgrün unten */
-  position: relative; /* wichtig für z-index */
+  background: linear-gradient(180deg, #e0f7ff, #a0e0ff);
+  position: relative;
 }
-h1 {
+  h1 {
   font-size: 2.8rem;        /* vorher 2.4rem, jetzt größer */
   margin: 12px 0 6px;
   letter-spacing: 1px;
@@ -49,7 +49,17 @@ h2{margin:18px 0 8px;color:#7a2f45;}
 @media (max-width:420px){.hint-box{min-height:72px;padding:14px;} h1{font-size:1.8rem;}}
 
 /* Weihnachtsdekoration */
-.snowflake{position:fixed;top:-10px;font-size:12px;color:#fff;user-select:none;pointer-events:none;z-index:998;animation:fall linear infinite;}
+.snowflake {
+  position: fixed;
+  top: -10px;
+  font-size: 16px; /* vorher 12px, jetzt größer */
+  color: #ffffff;  /* weiß bleibt */
+  text-shadow: 0 0 6px #fff, 0 0 12px #cceeff; /* leichter Glow für bessere Sichtbarkeit */
+  user-select: none;
+  pointer-events: none;
+  z-index: 998;
+  animation: fall linear infinite;
+}
 @keyframes fall{0%{transform:translateY(0) translateX(0);opacity:1;}100%{transform:translateY(100vh) translateX(20px);opacity:0;}}
 .lights{position:fixed;top:0;left:0;width:100%;height:24px;display:flex;justify-content:space-around;z-index:999;}
 .light{width:12px;height:12px;border-radius:50%;animation:blink 1.5s infinite alternate;}
@@ -201,8 +211,18 @@ modalBackdrop.addEventListener('click',(e)=>{if(e.target===modalBackdrop)closeMo
 document.addEventListener('keydown',(e)=>{if(e.key==='Escape')closeModal()});
 
 // Weihnachtsdekoration: Schnee
-function createSnowflake(){const snow=document.createElement('div');snow.className='snowflake';snow.textContent='❄';snow.style.left=Math.random()*100+'vw';snow.style.fontSize=Math.random()*10+12+'px';snow.style.animationDuration=(5+Math.random()*5)+'s';document.body.appendChild(snow);setTimeout(()=>snow.remove(),10000);}
-setInterval(createSnowflake,100);
+function createSnowflake(){
+  const snow=document.createElement('div');
+  snow.className='snowflake';
+  snow.textContent='❄';
+  snow.style.left=Math.random()*100+'vw';
+  const size=Math.random()*12+14; // vorher 12-22px, jetzt 14-26px
+  snow.style.fontSize=size+'px';
+  snow.style.animationDuration=(5+Math.random()*5)+'s';
+  document.body.appendChild(snow);
+  setTimeout(()=>snow.remove(),10000);
+}
+setInterval(createSnowflake,100); // Schneefrequenz leicht erhöhen
 
 // Weihnachtsdekoration: Lichterkette
 const colors=['#ff4f4f','#f7ff4f','#4fff4f','#4fdcff','#ff4fff'];
