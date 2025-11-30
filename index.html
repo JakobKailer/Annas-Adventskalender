@@ -135,36 +135,29 @@ h2 {
 
 @keyframes blink{0%{opacity:0.2;}100%{opacity:1;}}
 
+@media (max-width:420px){
+  .hint-box{min-height:72px;padding:14px;}
+  h1{font-size:1.8rem;}
+}
 #tree {
   position: fixed;
   bottom: 0;
   left: 50%;
   transform: translateX(-50%);
-  width: 80vw;
-  max-width: 1200px;
+  width: 80vw;          /* Baum breit */
+  max-width: 1200px;     /* optional */
   height: auto;
-  min-height: 600px;
-  background: url('tree.png') no-repeat center bottom/contain;
-  opacity: 0.15;
-  z-index: 0;
-  pointer-events: none;
-}
-
-#hints, h1, #countdown, .lights {
-  position: relative;
-  z-index: 1;
-}
-
-@media (max-width:420px){
-  .hint-box{min-height:72px;padding:14px;}
-  h1{font-size:1.8rem;}
+  min-height: 600px;     /* Mindesthöhe */
+  background: url('weihnachtsbild.jpg') no-repeat center bottom/contain; /* dein Baum-Bild */
+  background: url('weihnachtsbild01.jpg') no-repeat center bottom/contain; /* dein Baum-Bild */
+  opacity: 0.15;         /* dezent */
+  z-index: 0;            /* hinter allen Elementen */
+  pointer-events: none;  /* klickbar bleiben die Hinweise */
 }
 </style>
 </head>
 <body>
-
 <div id="tree"></div>
-
 <h1>💖 Weihnachts-Countdown für Dich 💖</h1>
 <div id="countdown" aria-live="polite">Lädt…</div>
 <h2>Deine täglichen Hinweise</h2>
@@ -221,12 +214,7 @@ const hintsContainer = document.getElementById('hints');
 function isHintAvailable(day){
   const now = new Date();
   const hintDate = new Date(now.getFullYear(),11,day);
-  return now > hintDate; // past days only
-}
-
-function isTodayHint(day){
-  const now = new Date();
-  return day === now.getDate(); // today
+  return now >= hintDate;
 }
 
 function showMessage(ev, day, text){
@@ -234,34 +222,39 @@ function showMessage(ev, day, text){
   const box = ev.currentTarget;
   const s = box.querySelector('div:last-child');
 
-  s.innerHTML = `<strong>Hinweis ${day}</strong><p>${text}</p>`;
-  box.classList.remove('locked');
+  if(isHintAvailable(day)){
+    s.innerHTML = `<strong>Hinweis ${day}</strong><p>${text}</p>`;
+    box.classList.remove('locked');
 
-  // Sparkle
-  const x = ev.clientX!==undefined ? ev.clientX : (ev.touches && ev.touches[0]?.clientX)||window.innerWidth/2;
-  const y = ev.clientY!==undefined ? ev.clientY : (ev.touches && ev.touches[0]?.clientY)||window.innerHeight/2;
-  for(let i=0;i<12;i++){
-    const spark = document.createElement('div');
-    spark.className='spark';
-    const size = Math.random()*8 +6;
-    spark.style.width = size+'px';
-    spark.style.height = size+'px';
-    spark.style.left = (x-size/2)+'px';
-    spark.style.top = (y-size/2)+'px';
-    document.body.appendChild(spark);
-    const angle = Math.random()*Math.PI*2;
-    const dist = Math.random()*80 + 30;
-    const targetX = Math.cos(angle)*dist;
-    const targetY = Math.sin(angle)*dist + (Math.random()*20-10);
-    spark.animate([{transform:'translate(0,0) scale(1)',opacity:1},{transform:`translate(${targetX}px,${targetY}px) scale(.3)`,opacity:0}],
-    {duration:650+Math.random()*250,easing:'cubic-bezier(.1,.9,.2,1)'});
-    setTimeout(()=>spark.remove(),1100);
+    // Sparkle
+    const x = ev.clientX!==undefined ? ev.clientX : (ev.touches && ev.touches[0]?.clientX)||window.innerWidth/2;
+    const y = ev.clientY!==undefined ? ev.clientY : (ev.touches && ev.touches[0]?.clientY)||window.innerHeight/2;
+    for(let i=0;i<12;i++){
+      const spark = document.createElement('div');
+      spark.className='spark';
+      const size = Math.random()*8 +6;
+      spark.style.width = size+'px';
+      spark.style.height = size+'px';
+      spark.style.left = (x-size/2)+'px';
+      spark.style.top = (y-size/2)+'px';
+      document.body.appendChild(spark);
+      const angle = Math.random()*Math.PI*2;
+      const dist = Math.random()*80 + 30;
+      const targetX = Math.cos(angle)*dist;
+      const targetY = Math.sin(angle)*dist + (Math.random()*20-10);
+      spark.animate([{transform:'translate(0,0) scale(1)',opacity:1},{transform:`translate(${targetX}px,${targetY}px) scale(.3)`,opacity:0}],
+      {duration:650+Math.random()*250,easing:'cubic-bezier(.1,.9,.2,1)'});
+      setTimeout(()=>spark.remove(),1100);
+    }
+
+  } else {
+    s.innerHTML = `<strong>Hinweis ${day}</strong><p>${["Nicht so ungeduldig 😘","Bald weißt du mehr ❤️","Noch ein bisschen warten 💕"][Math.floor(Math.random()*3)]}</p>`;
   }
 }
 
-// Create hint boxes
+// Hinweise erstellen
 hints.forEach((text, idx)=>{
-  const day = idx + 1;
+  const day = idx+1;
   const box = document.createElement('div');
   box.className = 'hint-box';
   box.setAttribute('role','button'); 
@@ -270,22 +263,13 @@ hints.forEach((text, idx)=>{
   const s = document.createElement('div');
 
   if(isHintAvailable(day)){
-    // Past hints: immediately visible
     s.innerHTML = `<strong>Hinweis ${day}</strong><p>${text}</p>`;
-  } else if(isTodayHint(day)){
-    // Today's hint: locked until click
-    s.innerHTML = `<strong>Hinweis ${day}</strong><p>Zum Ansehen tippen / klicken</p>`;
-    box.classList.add('locked');
-    box.addEventListener('click', (ev)=>showMessage(ev, day, text), {passive:false});
-    box.addEventListener('touchstart', (ev)=>showMessage(ev, day, text), {passive:false});
-    box.addEventListener('keydown', (e)=>{if(e.key==='Enter'||e.key===' '){showMessage(ev, day, text)}});
   } else {
-    // Future hints: locked
     s.innerHTML = `<strong>Hinweis ${day}</strong><p>Noch verschlossen</p>`;
     box.classList.add('locked');
-    box.addEventListener('click', (ev)=>showMessage(ev, day, text), {passive:false});
-    box.addEventListener('touchstart', (ev)=>showMessage(ev, day, text), {passive:false});
-    box.addEventListener('keydown', (e)=>{if(e.key==='Enter'||e.key===' '){showMessage(ev, day, text)}});
+    box.addEventListener('click',(ev)=>showMessage(ev, day, text),{passive:false});
+    box.addEventListener('touchstart',(ev)=>showMessage(ev, day, text),{passive:false});
+    box.addEventListener('keydown',(e)=>{if(e.key==='Enter'||e.key===' '){showMessage(e, day, text)}});
   }
 
   box.appendChild(meta);
