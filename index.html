@@ -6,120 +6,168 @@
 <title>Weihnachts-Countdown für Dich</title>
 <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&display=swap" rel="stylesheet">
 <style>
-:root{
-  --bg1:#fff5f7;
-  --bg2:#fff0fb;
-  --accent:#d9447a;
-  --card:#fff;
-  --muted:#9b9b9b;
-  --rose:#ffdeea;
-  --light:#ffd700;
-}
-html,body{height:100%;margin:0;font-family:"Helvetica Neue",Arial,sans-serif;background:linear-gradient(180deg,var(--bg1),var(--bg2));color:#5a1b2b;overflow-x:hidden;position:relative;}
-body{display:flex;flex-direction:column;align-items:center;padding:28px;box-sizing:border-box;position:relative}
-body {
+html,body {
+  height:100%;margin:0;font-family:"Helvetica Neue",Arial,sans-serif;
   background: linear-gradient(180deg, #e0f7ff, #a0e0ff);
-  position: relative;
+  color:#5a1b2b;
+  overflow-x:hidden;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  padding:28px;
+  box-sizing:border-box;
+  position:relative;
 }
-  h1 {
-  font-size: 2.8rem;        /* vorher 2.4rem, jetzt größer */
+
+h1 {
+  font-size: 2.8rem;
   margin: 12px 0 6px;
   letter-spacing: 1px;
-  color: var(--accent);
+  color: #d9447a;
   text-shadow: 0 0 12px #fff;
   text-align: center;
 }
-#countdown{font-size:2rem;margin-bottom:18px;color:#6b2b3f;font-family:'Dancing Script', cursive;text-shadow: 1px 1px 3px #ffd7ec;}
-h2{margin:18px 0 8px;color:#7a2f45;}
-#hints{width:100%;max-width:720px;display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;padding:8px 6px;box-sizing:border-box;}
-.hint-box{background:linear-gradient(180deg,var(--card),#fff);border-radius:14px;padding:12px 14px;box-shadow:0 6px 18px rgba(90,20,40,0.06);display:flex;align-items:center;justify-content:flex-start;gap:10px;cursor:pointer;user-select:none;border:1px solid rgba(90,20,40,0.05);transition:transform .14s ease, box-shadow .14s ease;min-height:62px;}
-.hint-box:active{transform:scale(.995);}
-.hint-box .meta{flex:0 0 56px;height:56px;border-radius:10px;background:linear-gradient(180deg,var(--rose),#ffebf5);display:flex;align-items:center;justify-content:center;font-size:1.15rem;}
-.hint-box strong{display:block;font-size:0.95rem;color:#4b1a2d;}
-.hint-box p{margin:0;font-size:0.86rem;color:var(--muted);}
-.locked p{color:#b39fa6;}
-.spark{position:fixed;width:8px;height:8px;border-radius:50%;pointer-events:none;z-index:9999;background:radial-gradient(circle,#fff8ff,#ffd7ec);box-shadow:0 0 12px rgba(217,68,122,0.7);mix-blend-mode:screen;}
-.modal-backdrop{position:fixed;inset:0;background:rgba(11,6,10,0.45);display:flex;align-items:center;justify-content:center;z-index:9998;opacity:0;pointer-events:none;transition:opacity .18s ease;}
-.modal-backdrop.show{opacity:1;pointer-events:auto;}
-.modal{background:#fff;border-radius:14px;padding:20px;max-width:420px;width:92%;box-shadow:0 18px 50px rgba(30,10,30,0.35);text-align:center;}
-.modal h3{margin:0 0 8px;color:var(--accent);}
-.modal p{margin:0 0 14px;color:#5a1b2b;font-size:0.98rem;}
-.modal .close{background:transparent;border:0;color:var(--accent);font-weight:700;cursor:pointer;padding:8px 12px;border-radius:8px;}
-.modal .date{font-size:0.85rem;color:var(--muted);margin-bottom:10px;}
-@media (max-width:420px){.hint-box{min-height:72px;padding:14px;} h1{font-size:1.8rem;}}
 
-/* Weihnachtsdekoration */
+#countdown {
+  font-size:2rem;
+  margin-bottom:18px;
+  color:#6b2b3f;
+  font-family:'Dancing Script', cursive;
+  text-shadow: 1px 1px 3px #ffd7ec;
+}
+
+h2 {
+  margin:18px 0 8px;
+  color:#7a2f45;
+}
+
+#hints {
+  width:100%;
+  max-width:720px;
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+  gap:12px;
+  padding:8px 6px;
+  box-sizing:border-box;
+}
+
+.hint-box {
+  background: linear-gradient(180deg,#fff,#fff);
+  border-radius:14px;
+  padding:12px 14px;
+  box-shadow:0 6px 18px rgba(90,20,40,0.06);
+  display:flex;
+  align-items:center;
+  justify-content:flex-start;
+  gap:10px;
+  cursor:pointer;
+  user-select:none;
+  border:1px solid rgba(90,20,40,0.05);
+  transition:transform .14s ease, box-shadow .14s ease;
+  min-height:62px;
+}
+
+.hint-box:active {
+  transform:scale(.995);
+}
+
+.hint-box .meta {
+  flex:0 0 56px;
+  height:56px;
+  border-radius:10px;
+  background:linear-gradient(180deg,#ffdeea,#ffebf5);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:1.15rem;
+}
+
+.hint-box strong { display:block; font-size:0.95rem; color:#4b1a2d; }
+.hint-box p { margin:0; font-size:0.86rem; color:#9b9b9b; }
+.locked p { color:#b39fa6; }
+
+.spark {
+  position:fixed;
+  width:8px;
+  height:8px;
+  border-radius:50%;
+  pointer-events:none;
+  z-index:9999;
+  background:radial-gradient(circle,#fff8ff,#ffd7ec);
+  box-shadow:0 0 12px rgba(217,68,122,0.7);
+  mix-blend-mode:screen;
+}
+
 .snowflake {
   position: fixed;
   top: -10px;
-  font-size: 16px; /* vorher 12px, jetzt größer */
-  color: #ffffff;  /* weiß bleibt */
-  text-shadow: 0 0 6px #fff, 0 0 12px #cceeff; /* leichter Glow für bessere Sichtbarkeit */
+  font-size: 16px;
+  color: #ffffff;
+  text-shadow: 0 0 6px #fff, 0 0 12px #cceeff;
   user-select: none;
   pointer-events: none;
   z-index: 998;
   animation: fall linear infinite;
 }
-@keyframes fall{0%{transform:translateY(0) translateX(0);opacity:1;}100%{transform:translateY(100vh) translateX(20px);opacity:0;}}
-.lights{position:fixed;top:0;left:0;width:100%;height:24px;display:flex;justify-content:space-around;z-index:999;}
-.light{width:12px;height:12px;border-radius:50%;animation:blink 1.5s infinite alternate;}
-@keyframes blink{0%{opacity:0.2;}100%{opacity:1;}}
-#tree {
-  position: fixed;
-  bottom: 0;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 80vw;          /* Baum sehr breit, 80% der Fensterbreite */
-  max-width: 2000px;    /* optional, damit es nicht zu riesig wird */
-  height: auto;         /* Höhe proportional zum Bild */
-  min-height: 800px;    /* mindestens 600px hoch */
-  background: url('weihnachtsbild.jpg') no-repeat center bottom/contain; /* dein lokales Bild */
-  opacity: 0.15;        /* sehr dezent, wie ein Hintergrund */
-  z-index: 2;           /* ganz hinten, hinter allen Hinweisen */
-  pointer-events: none; /* Baum blockiert keine Klicks auf Hinweise */
+
+@keyframes fall{
+  0%{transform:translateY(0) translateX(0);opacity:1;}
+  100%{transform:translateY(100vh) translateX(20px);opacity:0;}
 }
-#hints, h1, #countdown, .modal-backdrop {
-  position: relative;
-  z-index: 1;       /* alle wichtigen Elemente über dem Baum */
+
+.lights {
+  position:fixed;
+  top:0;
+  left:0;
+  width:100%;
+  height:24px;
+  display:flex;
+  justify-content:space-around;
+  z-index:999;
+}
+
+.light {
+  width:12px;
+  height:12px;
+  border-radius:50%;
+  animation:blink 1.5s infinite alternate;
+}
+
+@keyframes blink{0%{opacity:0.2;}100%{opacity:1;}}
+
+@media (max-width:420px){
+  .hint-box{min-height:72px;padding:14px;}
+  h1{font-size:1.8rem;}
 }
 </style>
 </head>
 <body>
-<div id="tree"></div>
+
 <h1>💖 Weihnachts-Countdown für Dich 💖</h1>
 <div id="countdown" aria-live="polite">Lädt…</div>
 <h2>Deine täglichen Hinweise</h2>
 <div id="hints" role="list"></div>
-
-<div id="modalBackdrop" class="modal-backdrop" aria-hidden="true">
-  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
-    <div class="date" id="modalDate"></div>
-    <h3 id="modalTitle">Hinweis</h3>
-    <p id="modalText">Text</p>
-    <button id="modalClose" class="close">Schließen</button>
-  </div>
-</div>
-
 <div class="lights" id="lightsContainer"></div>
 
 <script>
 // Countdown
 function updateCountdown(){
-  const now=new Date();
-  const year=now.getFullYear();
-  const christmas=new Date(year,11,25,0,0,0);
-  if(now>christmas){christmas.setFullYear(year+1);}
-  const diff=christmas-now;
-  const days=Math.floor(diff/(1000*60*60*24));
-  const hours=Math.floor(diff/(1000*60*60))%24;
-  const minutes=Math.floor(diff/(1000*60))%60;
-  const seconds=Math.floor(diff/1000)%60;
+  const now = new Date();
+  const year = now.getFullYear();
+  const christmas = new Date(year,11,25,0,0,0);
+  if(now > christmas){christmas.setFullYear(year+1);}
+  const diff = christmas - now;
+  const days = Math.floor(diff/(1000*60*60*24));
+  const hours = Math.floor(diff/(1000*60*60))%24;
+  const minutes = Math.floor(diff/(1000*60))%60;
+  const seconds = Math.floor(diff/1000)%60;
   document.getElementById('countdown').textContent=`${days} Tage ${hours} Std ${minutes} Min ${seconds} Sek`;
 }
-setInterval(updateCountdown,1000);updateCountdown();
+setInterval(updateCountdown,1000);
+updateCountdown();
 
 // Hinweise
-const hints=[
+const hints = [
 "Etwas, das lange unter dem Bett warten musste",
 "Ein kleines Abenteuer, das in deinen Händen beginnt…",
 "Etwas, das uns spielerisch näher zusammenbringt… 🤍",
@@ -146,88 +194,97 @@ const hints=[
 "Ein kleiner WALL-E und eine Eve, die wir zusammen zum Leben bauen🎁"
 ];
 
-const hintsContainer=document.getElementById('hints');
-const today=new Date();
+const hintsContainer = document.getElementById('hints');
 
 function isHintAvailable(day){
-  const now=new Date();
-  const hintDate=new Date(now.getFullYear(),11,day);
-  return now>=hintDate;
+  const now = new Date();
+  const hintDate = new Date(now.getFullYear(),11,day);
+  return now >= hintDate;
 }
 
-function showMessage(ev,day,text){
+function showMessage(ev, day, text){
   ev.preventDefault();
-  const x=(ev.clientX!==undefined)?ev.clientX:(ev.touches&&ev.touches[0]?.clientX)||window.innerWidth/2;
-  const y=(ev.clientY!==undefined)?ev.clientY:(ev.touches&&ev.touches[0]?.clientY)||window.innerHeight/2;
-  for(let i=0;i<12;i++){
-    const spark=document.createElement('div');
-    spark.className='spark';
-    const size=Math.random()*8+6;
-    spark.style.width=size+'px';
-    spark.style.height=size+'px';
-    spark.style.left=(x-size/2)+'px';
-    spark.style.top=(y-size/2)+'px';
-    document.body.appendChild(spark);
-    const angle=Math.random()*Math.PI*2;
-    const dist=Math.random()*80+30;
-    const targetX=Math.cos(angle)*dist;
-    const targetY=Math.sin(angle)*dist+(Math.random()*20-10);
-    spark.animate([{transform:'translate(0,0) scale(1)',opacity:1},{transform:`translate(${targetX}px, ${targetY}px) scale(.3)`,opacity:0}],{duration:650+Math.random()*250,easing:'cubic-bezier(.1,.9,.2,1)'});
-    setTimeout(()=>spark.remove(),1100);
-  }
+  const box = ev.currentTarget;
+  const s = box.querySelector('div:last-child');
+
   if(isHintAvailable(day)){
-    openModal(day,text);
+    s.innerHTML = `<strong>Hinweis ${day}</strong><p>${text}</p>`;
+    box.classList.remove('locked');
+
+    // Sparkle
+    const x = ev.clientX!==undefined ? ev.clientX : (ev.touches && ev.touches[0]?.clientX)||window.innerWidth/2;
+    const y = ev.clientY!==undefined ? ev.clientY : (ev.touches && ev.touches[0]?.clientY)||window.innerHeight/2;
+    for(let i=0;i<12;i++){
+      const spark = document.createElement('div');
+      spark.className='spark';
+      const size = Math.random()*8 +6;
+      spark.style.width = size+'px';
+      spark.style.height = size+'px';
+      spark.style.left = (x-size/2)+'px';
+      spark.style.top = (y-size/2)+'px';
+      document.body.appendChild(spark);
+      const angle = Math.random()*Math.PI*2;
+      const dist = Math.random()*80 + 30;
+      const targetX = Math.cos(angle)*dist;
+      const targetY = Math.sin(angle)*dist + (Math.random()*20-10);
+      spark.animate([{transform:'translate(0,0) scale(1)',opacity:1},{transform:`translate(${targetX}px,${targetY}px) scale(.3)`,opacity:0}],
+      {duration:650+Math.random()*250,easing:'cubic-bezier(.1,.9,.2,1)'});
+      setTimeout(()=>spark.remove(),1100);
+    }
+
   } else {
-    const msgs=["Nicht so ungeduldig 😘","Bald weißt du mehr ❤️","Noch ein bisschen warten 💕"];
-    openModal(null,msgs[Math.floor(Math.random()*msgs.length)]);
+    s.innerHTML = `<strong>Hinweis ${day}</strong><p>${["Nicht so ungeduldig 😘","Bald weißt du mehr ❤️","Noch ein bisschen warten 💕"][Math.floor(Math.random()*3)]}</p>`;
   }
 }
 
-hints.forEach((text,idx)=>{
-  const day=idx+1;
-  const box=document.createElement('div');
-  box.className='hint-box';
-  box.setAttribute('role','button'); box.tabIndex=0;
-  const meta=document.createElement('div'); meta.className='meta'; meta.textContent=day;
-  const s=document.createElement('div');
-  s.innerHTML=`<strong>Hinweis ${day}</strong><p>${ isHintAvailable(day)? 'Zum Ansehen tippen / klicken':'Noch verschlossen'}</p>`;
-  if(!isHintAvailable(day)){box.classList.add('locked');}
-  box.appendChild(meta); box.appendChild(s);
-  box.addEventListener('click',(ev)=>showMessage(ev,day,text),{passive:false});
-  box.addEventListener('touchstart',(ev)=>showMessage(ev,day,text),{passive:false});
-  box.addEventListener('keydown',(e)=>{if(e.key==='Enter'||e.key===' '){showMessage(e,day,text)}});
+// Hinweise erstellen
+hints.forEach((text, idx)=>{
+  const day = idx+1;
+  const box = document.createElement('div');
+  box.className = 'hint-box';
+  box.setAttribute('role','button'); 
+  box.tabIndex = 0;
+  const meta = document.createElement('div'); meta.className='meta'; meta.textContent = day;
+  const s = document.createElement('div');
+
+  if(isHintAvailable(day)){
+    s.innerHTML = `<strong>Hinweis ${day}</strong><p>${text}</p>`;
+  } else {
+    s.innerHTML = `<strong>Hinweis ${day}</strong><p>Noch verschlossen</p>`;
+    box.classList.add('locked');
+    box.addEventListener('click',(ev)=>showMessage(ev, day, text),{passive:false});
+    box.addEventListener('touchstart',(ev)=>showMessage(ev, day, text),{passive:false});
+    box.addEventListener('keydown',(e)=>{if(e.key==='Enter'||e.key===' '){showMessage(e, day, text)}});
+  }
+
+  box.appendChild(meta);
+  box.appendChild(s);
   hintsContainer.appendChild(box);
 });
 
-// Modal
-const modalBackdrop=document.getElementById('modalBackdrop');
-const modalText=document.getElementById('modalText');
-const modalDate=document.getElementById('modalDate');
-const modalClose=document.getElementById('modalClose');
-function openModal(day,text){modalDate.textContent=day?`Dein Hinweis für den ${day}. Dezember`:'';modalText.textContent=text;modalBackdrop.classList.add('show');modalBackdrop.setAttribute('aria-hidden','false');modalClose.focus();}
-function closeModal(){modalBackdrop.classList.remove('show');modalBackdrop.setAttribute('aria-hidden','true');}
-modalClose.addEventListener('click',closeModal);
-modalBackdrop.addEventListener('click',(e)=>{if(e.target===modalBackdrop)closeModal()});
-document.addEventListener('keydown',(e)=>{if(e.key==='Escape')closeModal()});
-
-// Weihnachtsdekoration: Schnee
+// Schnee
 function createSnowflake(){
-  const snow=document.createElement('div');
-  snow.className='snowflake';
-  snow.textContent='❄';
-  snow.style.left=Math.random()*100+'vw';
-  const size=Math.random()*12+14; // vorher 12-22px, jetzt 14-26px
-  snow.style.fontSize=size+'px';
-  snow.style.animationDuration=(5+Math.random()*5)+'s';
+  const snow = document.createElement('div');
+  snow.className = 'snowflake';
+  snow.textContent = '❄';
+  snow.style.left = Math.random()*100 + 'vw';
+  const size = Math.random()*12 + 14;
+  snow.style.fontSize = size+'px';
+  snow.style.animationDuration = (5+Math.random()*5)+'s';
   document.body.appendChild(snow);
   setTimeout(()=>snow.remove(),10000);
 }
-setInterval(createSnowflake,100); // Schneefrequenz leicht erhöhen
+setInterval(createSnowflake,100);
 
-// Weihnachtsdekoration: Lichterkette
-const colors=['#ff4f4f','#f7ff4f','#4fff4f','#4fdcff','#ff4fff'];
-const lightsContainer=document.getElementById('lightsContainer');
-colors.forEach(c=>{const l=document.createElement('div');l.className='light';l.style.background=c;lightsContainer.appendChild(l);});
+// Lichterkette
+const colors = ['#ff4f4f','#f7ff4f','#4fff4f','#4fdcff','#ff4fff'];
+const lightsContainer = document.getElementById('lightsContainer');
+colors.forEach(c=>{
+  const l = document.createElement('div');
+  l.className='light';
+  l.style.background = c;
+  lightsContainer.appendChild(l);
+});
 </script>
 </body>
 </html>
