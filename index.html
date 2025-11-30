@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Christmas Countdown für Dich</title>
+<title>Weihnachts-Countdown für Dich</title>
 <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&display=swap" rel="stylesheet">
 <style>
 :root{
@@ -43,12 +43,22 @@ h2{margin:18px 0 8px;color:#7a2f45;}
 .lights{position:fixed;top:0;left:0;width:100%;height:24px;display:flex;justify-content:space-around;z-index:999;}
 .light{width:12px;height:12px;border-radius:50%;animation:blink 1.5s infinite alternate;}
 @keyframes blink{0%{opacity:0.2;}100%{opacity:1;}}
-#tree{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:200px;height:300px;background:url('https://i.imgur.com/2F7VxyM.png') no-repeat center bottom/contain;opacity:0.25;z-index:1;}
+#tree{
+  position: fixed;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 200px;
+  height: 300px;
+  background: url('tree.png') no-repeat center bottom/contain;
+  opacity: 0.25;
+  z-index: 1;
+}
 </style>
 </head>
 <body>
 <div id="tree"></div>
-<h1>💖 Christmas Countdown für Dich 💖</h1>
+<h1>💖 Weihnachts-Countdown für Dich 💖</h1>
 <div id="countdown" aria-live="polite">Lädt…</div>
 <h2>Deine täglichen Hinweise</h2>
 <div id="hints" role="list"></div>
@@ -140,7 +150,7 @@ function showMessage(ev,day,text){
   if(isHintAvailable(day)){
     openModal(day,text);
   } else {
-    const msgs=["Nicht so ungeduldig 😘","Bald weißt du mehr ❤️","Noch ein bisschen warten, mein Schatz 💕"];
+    const msgs=["Nicht so ungeduldig 😘","Bald weißt du mehr ❤️","Noch ein bisschen warten 💕"];
     openModal(null,msgs[Math.floor(Math.random()*msgs.length)]);
   }
 }
@@ -174,7 +184,7 @@ document.addEventListener('keydown',(e)=>{if(e.key==='Escape')closeModal()});
 
 // Weihnachtsdekoration: Schnee
 function createSnowflake(){const snow=document.createElement('div');snow.className='snowflake';snow.textContent='❄';snow.style.left=Math.random()*100+'vw';snow.style.fontSize=Math.random()*10+12+'px';snow.style.animationDuration=(5+Math.random()*5)+'s';document.body.appendChild(snow);setTimeout(()=>snow.remove(),10000);}
-setInterval(createSnowflake,200);
+setInterval(createSnowflake,100);
 
 // Weihnachtsdekoration: Lichterkette
 const colors=['#ff4f4f','#f7ff4f','#4fff4f','#4fdcff','#ff4fff'];
