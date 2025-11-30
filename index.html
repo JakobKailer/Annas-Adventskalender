@@ -138,7 +138,7 @@ function showMessage(ev,day,text){
   if(isHintAvailable(day)){
     openModal(day,text);
   } else {
-    const msgs=["Nicht so ungeduldig 😘","Bald weißt du mehr ❤️","Noch ein bisschen warten, mein Schatz 💕"];
+    const msgs=["Nicht so ungeduldig 😘","Bald weißt du mehr ❤️","Noch ein bisschen warten 💕"];
     openModal(null,msgs[Math.floor(Math.random()*msgs.length)]);
   }
 }
