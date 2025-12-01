@@ -251,24 +251,41 @@ function showMessage(ev, day, text){
   }
 }
 
-// Hinweise erstellen
-hints.forEach((text, idx)=>{
-  const day = idx+1;
+// Hinweise erstellen mit neuer Logik
+hints.forEach((text, idx) => {
+  const day = idx + 1;
   const box = document.createElement('div');
   box.className = 'hint-box';
-  box.setAttribute('role','button'); 
+  box.setAttribute('role', 'button'); 
   box.tabIndex = 0;
-  const meta = document.createElement('div'); meta.className='meta'; meta.textContent = day;
+  
+  const meta = document.createElement('div'); 
+  meta.className = 'meta'; 
+  meta.textContent = day;
+  
   const s = document.createElement('div');
 
-  if(isHintAvailable(day)){
+  const now = new Date();
+  const currentDay = now.getDate(); // aktueller Tag im Dezember
+
+  if (day < currentDay) {
+    // Frühere Hinweise automatisch zeigen
     s.innerHTML = `<strong>Hinweis ${day}</strong><p>${text}</p>`;
+    box.classList.remove('locked');
+  } else if (day === currentDay) {
+    // Heutiger Hinweis: klickbar
+    s.innerHTML = `<strong>Hinweis ${day}</strong><p>Klicke um den neuen Hinweis zu bekommen</p>`;
+    box.classList.add('locked');
+    box.addEventListener('click', (ev) => showMessage(ev, day, text), {passive:false});
+    box.addEventListener('touchstart', (ev) => showMessage(ev, day, text), {passive:false});
+    box.addEventListener('keydown', (e) => { if(e.key==='Enter'||e.key===' ') showMessage(e, day, text); });
   } else {
+    // Zukünftige Hinweise: noch verschlossen
     s.innerHTML = `<strong>Hinweis ${day}</strong><p>Noch verschlossen</p>`;
     box.classList.add('locked');
-    box.addEventListener('click',(ev)=>showMessage(ev, day, text),{passive:false});
-    box.addEventListener('touchstart',(ev)=>showMessage(ev, day, text),{passive:false});
-    box.addEventListener('keydown',(e)=>{if(e.key==='Enter'||e.key===' '){showMessage(e, day, text)}});
+    box.addEventListener('click', (ev) => showMessage(ev, day, text), {passive:false});
+    box.addEventListener('touchstart', (ev) => showMessage(ev, day, text), {passive:false});
+    box.addEventListener('keydown', (e) => { if(e.key==='Enter'||e.key===' ') showMessage(e, day, text); });
   }
 
   box.appendChild(meta);
