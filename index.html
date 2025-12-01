@@ -218,7 +218,7 @@ function isHintAvailable(day){
 
 function isTodayHint(day){
   const now = new Date();
-  return day === now.getDate(now.getFullYear(), 11, day); // today’s hint
+  return day === now.getDate(); // today’s day of month
 }
 
 function showMessage(ev, day, text){
