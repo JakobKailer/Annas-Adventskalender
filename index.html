@@ -213,7 +213,12 @@ const hintsContainer = document.getElementById('hints');
 function isHintAvailable(day){
   const now = new Date();
   const hintDate = new Date(now.getFullYear(),11,day);
-  return now >= hintDate;
+  return now > hintDate;
+}
+
+function isTodayHint(day){
+  const now = new Date();
+  return day === now.getDate(now.getFullYear(), 11, day); // today’s hint
 }
 
 function showMessage(ev, day, text){
@@ -224,8 +229,17 @@ function showMessage(ev, day, text){
   if(isHintAvailable(day)){
     s.innerHTML = `<strong>Hinweis ${day}</strong><p>${text}</p>`;
     box.classList.remove('locked');
-
-    // Sparkle
+    }
+id
+  } else if(isTodayHint(day)) {
+    // Today's hint clicked: reveal it
+    s.innerHTML = `<strong>Hinweis ${day}</strong><p>${text}</p>`;
+    box.classList.remove('today');
+  } else {
+    s.innerHTML = `<strong>Hinweis ${day}</strong><p>${["Nicht so ungeduldig 😘","Bald weißt du mehr ❤️","Noch ein bisschen warten 💕"][Math.floor(Math.random()*3)]}</p>`;
+  }
+  // Sparkle effect for today or past hints clicked
+  if(isHintAvailable(day) || isTodayHint(day)){
     const x = ev.clientX!==undefined ? ev.clientX : (ev.touches && ev.touches[0]?.clientX)||window.innerWidth/2;
     const y = ev.clientY!==undefined ? ev.clientY : (ev.touches && ev.touches[0]?.clientY)||window.innerHeight/2;
     for(let i=0;i<12;i++){
@@ -242,13 +256,9 @@ function showMessage(ev, day, text){
       const targetX = Math.cos(angle)*dist;
       const targetY = Math.sin(angle)*dist + (Math.random()*20-10);
       spark.animate([{transform:'translate(0,0) scale(1)',opacity:1},{transform:`translate(${targetX}px,${targetY}px) scale(.3)`,opacity:0}],
-      {duration:650+Math.random()*250,easing:'cubic-bezier(.1,.9,.2,1)'});
+        {duration:650+Math.random()*250,easing:'cubic-bezier(.1,.9,.2,1)'});
       setTimeout(()=>spark.remove(),1100);
     }
-
-  } else {
-    s.innerHTML = `<strong>Hinweis ${day}</strong><p>${["Nicht so ungeduldig 😘","Bald weißt du mehr ❤️","Noch ein bisschen warten 💕"][Math.floor(Math.random()*3)]}</p>`;
-  }
 }
 
 // Hinweise erstellen
@@ -263,6 +273,13 @@ hints.forEach((text, idx)=>{
 
   if(isHintAvailable(day)){
     s.innerHTML = `<strong>Hinweis ${day}</strong><p>${text}</p>`;
+  } else if(isTodayHint(day)) {
+    // today: clickable message, but not locked
+    s.innerHTML = `<strong>Hinweis ${day}</strong><p>Klicke um den neuen Hinweis zu bekommen</p>`;
+    box.classList.add('today'); // for styling if you want
+    box.addEventListener('click',(ev)=>showMessage(ev, day, text),{passive:false});
+    box.addEventListener('touchstart',(ev)=>showMessage(ev, day, text),{passive:false});
+    box.addEventListener('keydown',(e)=>{if(e.key==='Enter'||e.key===' '){showMessage(e, day, text)}});
   } else {
     s.innerHTML = `<strong>Hinweis ${day}</strong><p>Noch verschlossen</p>`;
     box.classList.add('locked');
