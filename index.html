@@ -141,14 +141,12 @@ h2 {
 }
 #tree {
   position: fixed;
-  bottom: 0;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 80vw;          /* Baum breit */
-  max-width: 1200px;     /* optional */
-  height: auto;
-  min-height: 600px;     /* Mindesthöhe */
-  background: url('tree.jpg') no-repeat center bottom/contain; /* dein Baum-Bild */
+  top: 0;
+  left: 0;
+  width: 100vw;          /* volle Breite */
+  height: 100vh;         /* volle Höhe */
+  background: url('tree.jpg') no-repeat center center;
+  background-size: cover; /* passt das Bild an, um den gesamten Bereich zu füllen */
   opacity: 0.15;         /* dezent */
   z-index: 0;            /* hinter allen Elementen */
   pointer-events: none;  /* klickbar bleiben die Hinweise */
